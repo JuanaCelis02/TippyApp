@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TippyApp</string>
+    <string name="base">Consumo</string>
+    <string name="tip">Propina</string>
+    <string name="total">Total</string>
+    <string name="bill_amount">Total de factura</string>
 </resources>
