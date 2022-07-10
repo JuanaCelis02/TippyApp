@@ -1,5 +1,6 @@
 package com.example.tippyapp
 
+import android.animation.ArgbEvaluator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +9,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.example.tippyapp.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
@@ -24,12 +26,14 @@ class MainActivity : AppCompatActivity() {
 
         binding.seekBarTip.progress = INITIAL_TIP_PERCENT
         binding.tvTipPercentLabel.text = "$INITIAL_TIP_PERCENT%"
+        changeTipDescription(INITIAL_TIP_PERCENT)
         binding.seekBarTip.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 //Imprime en LogCat el valor de la barra de progreso
                 Log.i(TAG, "onProgressChanged $progress")
                 binding.tvTipPercentLabel.text = "$progress%"
                 computeTipAndTotal()
+                changeTipDescription(progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -50,6 +54,25 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun changeTipDescription(tipPercent:Int) {
+        val tipDescription = when(tipPercent){
+            in 0..9 -> "Poco"
+            in 10..14 -> "Aceptable"
+            in 15..19 -> "Bueno"
+            in 20..24 ->  "Genial"
+            else -> "Asombroso"
+        }
+        binding.tvDescriptionTip.text = tipDescription
+        //Cargar el color en base al porcentaje de propina
+        val color = ArgbEvaluator().evaluate(
+            tipPercent.toFloat() / binding.seekBarTip.max,
+            ContextCompat.getColor(this, R.color.worst_tip),
+            ContextCompat.getColor(this, R.color.best_tip),
+        )as Int
+        binding.tvDescriptionTip.setTextColor(color)
+
     }
 
     private fun computeTipAndTotal() {
