@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
                 //Imprime en LogCat el valor de la barra de progreso
                 Log.i(TAG, "onProgressChanged $progress")
                 binding.tvTipPercentLabel.text = "$progress%"
+                computeTipAndTotal()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -52,6 +53,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun computeTipAndTotal() {
+        if(binding.etBaseAmount.text.isEmpty()){
+            binding.tvTipAmount.text = ""
+            binding.tvTotalAmount.text = ""
+            return
+        }
         //1. Obtener el valor de la factura y el porcentaje de propina
         val baseAmount = binding.etBaseAmount.text.toString().toDouble()
         val tipPercent = binding.seekBarTip.progress
@@ -59,8 +65,8 @@ class MainActivity : AppCompatActivity() {
         val tipAmount = baseAmount * tipPercent / 100
         val totalAmount = baseAmount + tipAmount
         //3. Update the UI
-        binding.tvTipAmount.text = tipAmount.toString()
-        binding.tvTotalAmount.text = totalAmount.toString()
+        binding.tvTipAmount.text = "%.3f".format(tipAmount)
+        binding.tvTotalAmount.text = "%.3f".format(totalAmount)
     }
 
 }
