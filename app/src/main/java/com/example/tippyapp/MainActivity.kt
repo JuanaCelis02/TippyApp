@@ -45,9 +45,22 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 //Obtengo lo que el usuario esta escribiendo
                 Log.i(TAG, "afterTextChanged $s")
+                computeTipAndTotal()
             }
 
         })
+    }
+
+    private fun computeTipAndTotal() {
+        //1. Obtener el valor de la factura y el porcentaje de propina
+        val baseAmount = binding.etBaseAmount.text.toString().toDouble()
+        val tipPercent = binding.seekBarTip.progress
+        //2. Calcular la propina y total
+        val tipAmount = baseAmount * tipPercent / 100
+        val totalAmount = baseAmount + tipAmount
+        //3. Update the UI
+        binding.tvTipAmount.text = tipAmount.toString()
+        binding.tvTotalAmount.text = totalAmount.toString()
     }
 
 }
